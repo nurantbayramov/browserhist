@@ -36,6 +36,22 @@ void DoublyLinkedList::insert_after(Node* ref, Node* n) {
     size_++;
 }
 
+Node* DoublyLinkedList::remove_node(Node* n) {
+    if (!n) return nullptr;
+    if (n->prev_) n->prev_->next_ = n->next_;
+    else head_ = n->next_;
+    if (n->next_) n->next_->prev_ = n->prev_;
+    else tail_ = n->prev_;
+    n->prev_ = nullptr;
+    n->next_ = nullptr;
+    size_--;
+    return n;
+}
+
+Node* DoublyLinkedList::remove_head() {
+    return remove_node(head_);
+}
+
 void DoublyLinkedList::clear() {
     Node* cur = head_;
     while (cur) {

@@ -6,7 +6,8 @@ using namespace std;
 
 /**
  * Owns every node it holds. Node* handed out are non-owning and
- * die when the list changes.
+ * die when the list changes. remove_node() is the one exception: the
+ * caller gets the node back and has to delete it (or re-insert it).
  */
 class DoublyLinkedList {
 public:
@@ -23,6 +24,12 @@ public:
 
     /** Link n right after ref. ref == nullptr falls back to append. */
     void insert_after(Node* ref, Node* n);
+
+    /** Unlink n and return it, caller deletes. nullptr in -> nullptr out. */
+    Node* remove_node(Node* n);
+
+    /** Oldest node, unlinked. nullptr if empty. */
+    Node* remove_head();
 
     void clear();
 

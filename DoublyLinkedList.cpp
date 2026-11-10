@@ -52,6 +52,22 @@ Node* DoublyLinkedList::remove_head() {
     return remove_node(head_);
 }
 
+int DoublyLinkedList::truncate_after(Node* n) {
+    if (!n) return 0;
+    int count = 0;
+    Node* cur = n->next_;
+    while (cur) {
+        Node* nxt = cur->next_;
+        delete cur;
+        cur = nxt;
+        count++;
+    }
+    n->next_ = nullptr;
+    tail_ = n;
+    size_ -= count;
+    return count;
+}
+
 void DoublyLinkedList::clear() {
     Node* cur = head_;
     while (cur) {

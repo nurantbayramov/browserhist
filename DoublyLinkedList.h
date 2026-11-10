@@ -31,6 +31,9 @@ public:
     /** Oldest node, unlinked. nullptr if empty. */
     Node* remove_head();
 
+    /** Deletes everything after n, returns how many. 0 if n is the tail. */
+    int truncate_after(Node* n);
+
     void clear();
 
     /** Snapshot head -> tail. Not owning. */

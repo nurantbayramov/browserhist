@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "DoublyLinkedList.h"
+#include "Stack.h"
 
 using namespace std;
 
@@ -152,6 +153,24 @@ void test_big() {
     check(l.to_list() == mirror, "l.to_list() == mirror", __LINE__); // same order as what we kept
 }
 
+void test_stack() {
+    Stack<int> s;
+    check(s.is_empty(), "s.is_empty()", __LINE__);
+    check(!s.pop().has_value(), "!s.pop().has_value()", __LINE__);
+    check(!s.peek().has_value(), "!s.peek().has_value()", __LINE__);
+
+    for (int i = 0; i < 20; i++) s.push(i); // forces a few grows
+    check(s.size() == 20, "s.size() == 20", __LINE__);
+    check(s.peek().value() == 19, "s.peek().value() == 19", __LINE__);
+    for (int i = 19; i >= 0; i--) check(s.pop().value() == i, "s.pop().value() == i", __LINE__);
+    check(s.is_empty(), "s.is_empty()", __LINE__);
+
+    s.push(1);
+    s.push(2);
+    s.clear();
+    check(s.is_empty() && !s.pop().has_value(), "s.is_empty() && !s.pop().has_value()", __LINE__);
+}
+
 int main() {
     test_empty();
     test_single();
@@ -161,6 +180,7 @@ int main() {
     test_truncate();
     test_find_and_ids();
     test_big();
+    test_stack();
 
     if (fails) cout << fails << " check(s) failed\n";
     else cout << "all good\n";

@@ -104,6 +104,21 @@ void test_push_front() {
           "l.head()->url == \"a\" && l.tail()->url == \"b\" && l.verify()", __LINE__);
 }
 
+void test_truncate() {
+    DoublyLinkedList l;
+    fill(l, 5);
+    check(l.truncate_after(l.tail()) == 0, "l.truncate_after(l.tail()) == 0", __LINE__);
+    check(l.size() == 5 && l.verify(), "l.size() == 5 && l.verify()", __LINE__);
+
+    check(l.truncate_after(l.find("c")) == 2, "l.truncate_after(l.find(\"c\")) == 2", __LINE__);
+    check(l.tail()->url == "c" && l.size() == 3 && l.verify(), 
+          "l.tail()->url == \"c\" && l.size() == 3 && l.verify()", __LINE__);
+
+    check(l.truncate_after(l.head()) == 2, "l.truncate_after(l.head()) == 2", __LINE__);
+    check(l.tail() == l.head() && l.size() == 1 && l.verify(), 
+          "l.tail() == l.head() && l.size() == 1 && l.verify()", __LINE__);
+}
+
 void test_find_and_ids() {
     DoublyLinkedList l;
     l.append(mk("dup"));
@@ -143,6 +158,7 @@ int main() {
     test_remove_spots();
     test_insert_after();
     test_push_front();
+    test_truncate();
     test_find_and_ids();
     test_big();
 

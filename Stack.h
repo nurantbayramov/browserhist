@@ -3,7 +3,11 @@
 
 using namespace std;
 
-/** LIFO on a plain array. T needs a default constructor. */
+/*
+ * LIFO on a plain array. T needs a default constructor.
+ * If T is a pointer (e.g. Node*), clear() and the destructor do NOT delete what
+ * it points to. Whoever stores the pointers has to delete them.
+ */
 template <typename T>
 class Stack {
 public:

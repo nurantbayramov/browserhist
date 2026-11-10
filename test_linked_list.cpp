@@ -93,4 +93,60 @@ void test_insert_after() {
 
     DoublyLinkedList e;
     e.insert_after(nullptr, mk("only"));
-    check(e.size() == 1
+    check(e.size() == 1 && e.verify(), "e.size() == 1 && e.verify()", __LINE__);
+}
+
+void test_push_front() {
+    DoublyLinkedList l;
+    l.push_front(mk("b"));
+    l.push_front(mk("a"));
+    check(l.head()->url == "a" && l.tail()->url == "b" && l.verify(), 
+          "l.head()->url == \"a\" && l.tail()->url == \"b\" && l.verify()", __LINE__);
+}
+
+void test_find_and_ids() {
+    DoublyLinkedList l;
+    l.append(mk("dup"));
+    l.append(mk("dup"));
+    check(l.find("dup") == l.head(), "l.find(\"dup\") == l.head()", __LINE__); // first one wins
+    check(l.head()->id != l.tail()->id, "l.head()->id != l.tail()->id", __LINE__);
+}
+
+void test_big() {
+    DoublyLinkedList l;
+    vector<Node*> mirror;
+    for (int i = 0; i < 1000; i++) {
+        Node* n = mk(to_string(i));
+        l.append(n);
+        mirror.push_back(n);
+    }
+    check(l.size() == 1000, "l.size() == 1000", __LINE__);
+
+    srand(42);
+    for (int i = 0; i < 500; i++) {
+        int k = rand() % mirror.size();
+        delete l.remove_node(mirror[k]);
+        mirror.erase(mirror.begin() + k);
+        if (l.size() != (int)l.to_list().size()) { 
+            check(false, "l.size() != (int)l.to_list().size()", __LINE__); 
+            break; 
+        }
+    }
+    check(l.size() == 500, "l.size() == 500", __LINE__);
+    check(l.verify(), "l.verify()", __LINE__);
+    check(l.to_list() == mirror, "l.to_list() == mirror", __LINE__); // same order as what we kept
+}
+
+int main() {
+    test_empty();
+    test_single();
+    test_remove_spots();
+    test_insert_after();
+    test_push_front();
+    test_find_and_ids();
+    test_big();
+
+    if (fails) cout << fails << " check(s) failed\n";
+    else cout << "all good\n";
+    return fails != 0;
+}

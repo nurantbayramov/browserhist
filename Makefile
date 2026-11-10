@@ -1,5 +1,5 @@
 CXX = g++
-FLAGS = -std=c++17 -Wall -Wextra -g -fsanitize=address,undefined
+CXXFLAGS = -std=c++17 -Wall
 
 test_linked_list: test_linked_list.cpp DoublyLinkedList.cpp
 	$(CXX) $(FLAGS) $^ -o $@

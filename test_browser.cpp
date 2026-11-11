@@ -8,9 +8,11 @@ int main() {
     browser.visit("github.com");
     browser.visit("spotify.com");
 
-    cout << "Back 1: " << browser.back(1) << endl;
-    cout << "Back 1: " << browser.back(1) << endl;
-    cout << "Back 100: " << browser.back(100) << endl;
+    browser.back(2);
+
+    cout << "Forward 1: " << browser.forward(1) << endl;
+    cout << "Forward 1: " << browser.forward(1) << endl;
+    cout << "Forward 100: " << browser.forward(100) << endl;
 
     return 0;
 }

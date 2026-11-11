@@ -33,5 +33,20 @@ void BrowserHistory::visit(const string& url) {
     Node* oldest = history.remove_head();
     delete oldest;
 }
+}
+string BrowserHistory::back(int steps) {
+    if (steps < 0) {
+        throw invalid_argument("Steps cannot be negative");
+    }
 
+    if (current == nullptr) {
+        return "";
+    }
+
+    while (steps > 0 && current->prev() != nullptr) {
+        current = current->prev();
+        steps--;
+    }
+
+    return current->url;
 }

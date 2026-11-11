@@ -23,4 +23,7 @@ public:
     /** Returns the current page, or nullptr if history is empty. */
     Node* current_page() const;
 
+    /** Prints all visited pages and marks the current page. */
+    void display_history() const;
+
 };

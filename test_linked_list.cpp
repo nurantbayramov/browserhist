@@ -147,6 +147,123 @@ void test_stack() {
     check(s.is_empty() && !s.pop().has_value(), "stack: clear empties it");
 }
 
+void test_null_inputs() {
+    DoublyLinkedList l;
+    fill(l, 2); // a b
+    l.append(nullptr);
+    l.push_front(nullptr);
+    l.insert_after(l.head(), nullptr);
+    check(l.size() == 2 && l.verify(), "null: null nodes are ignored");
+    check(l.truncate_after(nullptr) == 0, "null: truncate_after(nullptr) removes nothing");
+    check(l.size() == 2 && l.verify(), "null: list unchanged after truncate_after(nullptr)");
+}
+
+void test_insert_after_null_ref() {
+    DoublyLinkedList l;
+    fill(l, 2); // a b
+    l.insert_after(nullptr, mk("z"));
+    check(l.tail()->url == "z" && l.size() == 3 && l.verify(), "insert_after: nullptr ref appends to a non-empty list");
+}
+
+void test_remove_head_until_empty() {
+    DoublyLinkedList l;
+    fill(l, 3); // a b c
+    for (char c = 'a'; c <= 'c'; c++) {
+        Node* h = l.remove_head();
+        check(h != nullptr && h->url == string(1, c), "remove_head: oldest comes out first");
+        delete h;
+        check(l.verify(), "remove_head: verify after each removal");
+    }
+    check(l.is_empty() && l.head() == nullptr && l.tail() == nullptr, "remove_head: list is empty at the end");
+    check(l.remove_head() == nullptr, "remove_head: nullptr once empty");
+    l.append(mk("x"));
+    check(l.size() == 1 && l.verify(), "remove_head: list reusable after emptying");
+}
+
+void test_clear_and_reuse() {
+    DoublyLinkedList l;
+    fill(l, 4);
+    l.clear();
+    check(l.is_empty() && l.head() == nullptr && l.tail() == nullptr && l.verify(), "clear: list is empty");
+    l.clear(); // a second clear must be harmless
+    check(l.verify(), "clear: second clear is harmless");
+    fill(l, 2);
+    check(l.size() == 2 && l.head()->url == "a" && l.tail()->url == "b" && l.verify(), "clear: list reusable");
+}
+
+// what delete + restore does: take a node out, then put the same node back
+void test_restore_same_node() {
+    DoublyLinkedList l;
+    fill(l, 3); // a b c
+    Node* b = l.find("b");
+    int oldId = b->id;
+    Node* before = b->prev();
+    l.remove_node(b);
+    check(l.size() == 2 && l.verify(), "restore: size and links after removing b");
+    l.insert_after(before, b);
+    vector<Node*> v = l.to_list();
+    check(v.size() == 3 && v[0]->url == "a" && v[1]->url == "b" && v[2]->url == "c", "restore: b is back between a and c");
+    check(b->id == oldId, "restore: node keeps its id");
+    check(l.verify(), "restore: verify after putting b back");
+    Node* a = l.remove_head(); // head goes back with push_front
+    l.push_front(a);
+    check(l.head() == a && l.size() == 3 && l.verify(), "restore: head goes back at the front");
+    Node* c = l.remove_node(l.tail()); // tail goes back after the new tail
+    l.insert_after(l.tail(), c);
+    check(l.tail() == c && l.size() == 3 && l.verify(), "restore: tail goes back at the end");
+}
+
+void test_ids_never_repeat() {
+    DoublyLinkedList l;
+    fill(l, 3);
+    int lastId = l.tail()->id;
+    delete l.remove_node(l.tail());
+    Node* n = mk("new");
+    l.append(n);
+    check(n->id > lastId, "ids: a new node gets a bigger id than every earlier one");
+    vector<Node*> v = l.to_list();
+    bool ok = true;
+    for (size_t i = 0; i < v.size(); i++)
+        for (size_t j = i + 1; j < v.size(); j++)
+            if (v[i]->id == v[j]->id) ok = false;
+    check(ok, "ids: no two nodes share an id");
+}
+
+void test_stack_growth() {
+    Stack<int> s;
+    for (int i = 0; i < 100; i++) s.push(i * 2);
+    check(s.size() == 100, "stack growth: size after 100 pushes");
+    bool ok = true;
+    for (int i = 99; i >= 0; i--) {
+        optional<int> v = s.pop();
+        if (!v.has_value() || v.value() != i * 2) ok = false;
+    }
+    check(ok, "stack growth: all 100 values come back in reverse order");
+    check(s.is_empty(), "stack growth: empty after popping everything");
+    s.push(7); // still usable after emptying
+    check(s.size() == 1 && s.peek().value() == 7, "stack growth: reusable after emptying");
+}
+
+void test_stack_other_types() {
+    Stack<string> s;
+    s.push("a");
+    s.push("b");
+    check(s.peek().value() == "b", "stack<string>: peek returns the top");
+    check(s.size() == 2, "stack<string>: peek does not remove");
+    check(s.pop().value() == "b" && s.pop().value() == "a", "stack<string>: LIFO order");
+    // the delete/restore stack may hold node pointers
+    Stack<Node*> p;
+    Node* x = mk("x");
+    Node* y = mk("y");
+    p.push(x);
+    p.push(y);
+    Node* top = p.pop().value();
+    check(top == y, "stack<Node*>: last pushed comes out first");
+    delete top;
+    delete p.pop().value();
+    check(p.is_empty(), "stack<Node*>: empty after popping both");
+}
+
 int main() {
     test_empty();
     test_single();
@@ -157,6 +274,14 @@ int main() {
     test_find_and_ids();
     test_big();
     test_stack();
+    test_null_inputs();
+    test_insert_after_null_ref();
+    test_remove_head_until_empty();
+    test_clear_and_reuse();
+    test_restore_same_node();
+    test_ids_never_repeat();
+    test_stack_growth();
+    test_stack_other_types();
     if (fails) cout << fails << " check(s) failed\n";
     else cout << "all good\n";
     return fails != 0;

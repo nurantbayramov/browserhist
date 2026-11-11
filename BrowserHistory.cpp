@@ -1,0 +1,37 @@
+#include "BrowserHistory.h"
+#include <stdexcept>
+#include <ctime>
+
+using namespace std;
+
+BrowserHistory::BrowserHistory(const string& homepage, int capacity) {
+    if (homepage.empty()) {
+        throw invalid_argument("URL cannot be empty");
+    }
+
+    if (capacity < 1) {
+        throw invalid_argument("Capacity must be positive");
+    }
+
+    this->capacity = capacity;
+
+    current = new Node(homepage, homepage, time(nullptr));
+    history.append(current);
+}
+void BrowserHistory::visit(const string& url) {
+    if (url.empty()) {
+    throw invalid_argument("URL cannot be empty");
+} 
+    if (current != nullptr) {
+    history.truncate_after(current);
+}
+    Node* newPage = new Node(url, url, time(nullptr));
+    history.append(newPage);
+    current = newPage;
+
+    if (history.size() > capacity) {
+    Node* oldest = history.remove_head();
+    delete oldest;
+}
+
+}

@@ -20,5 +20,8 @@ int main() {
 
     cout << "After back: " << browser.current_page()->url << endl;
 
+    cout << "\nBrowser history:" << endl;
+    browser.display_history(); 
+
     return 0;
 }

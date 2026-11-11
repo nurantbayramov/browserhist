@@ -1,3 +1,4 @@
+
 #include "BrowserHistory.h"
 #include <iostream>
 using namespace std;
@@ -21,7 +22,16 @@ int main() {
     cout << "After back: " << browser.current_page()->url << endl;
 
     cout << "\nBrowser history:" << endl;
-    browser.display_history(); 
+    browser.display_history();
+
+    browser.delete_history();
+
+    cout << "\nAfter deleting history:" << endl;
+    browser.display_history();
+
+    if (browser.current_page() == nullptr) {
+        cout << "Current page is empty" << endl;
+    }
 
     return 0;
 }

@@ -94,5 +94,10 @@ void BrowserHistory::display_history() const {
     }
 }
 
+void BrowserHistory::delete_history() {
+    history.clear();
+    current = nullptr;
+}
+
 
 

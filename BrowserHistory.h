@@ -26,4 +26,7 @@ public:
     /** Prints all visited pages and marks the current page. */
     void display_history() const;
 
+    /** Deletes all pages from browser history. */
+    void delete_history();
+
 };

@@ -16,5 +16,8 @@ public:
 
     /** Moves back by the given number of steps and returns the URL. */
     string back(int steps);
-    
+
+    /** Moves forward by the given number of steps and returns the URL. */
+    string forward(int steps);
+
 };

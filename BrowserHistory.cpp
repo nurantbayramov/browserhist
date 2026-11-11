@@ -50,3 +50,20 @@ string BrowserHistory::back(int steps) {
 
     return current->url;
 }
+string BrowserHistory::forward(int steps) {
+    if (steps < 0) {
+        throw invalid_argument("Steps cannot be negative");
+    }
+
+    if (current == nullptr) {
+        return "";
+    }
+
+    while (steps > 0 && current->next() != nullptr) {
+        current = current->next();
+        steps--;
+    }
+
+    return current->url;
+}
+

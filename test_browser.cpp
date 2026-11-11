@@ -14,5 +14,11 @@ int main() {
     cout << "Forward 1: " << browser.forward(1) << endl;
     cout << "Forward 100: " << browser.forward(100) << endl;
 
+    cout << "Current page: " << browser.current_page()->url << endl;
+
+    browser.back(1);
+
+    cout << "After back: " << browser.current_page()->url << endl;
+
     return 0;
 }

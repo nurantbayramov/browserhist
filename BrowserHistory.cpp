@@ -83,7 +83,7 @@ void BrowserHistory::display_history() const {
         return;
     }
 
-    for (int i = 0; i < pages.size(); i++) {
+    for (size_t i = 0; i < pages.size(); i++) {
         cout << i + 1 << ". " << pages[i]->url;
 
         if (pages[i] == current) {

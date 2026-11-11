@@ -20,4 +20,7 @@ public:
     /** Moves forward by the given number of steps and returns the URL. */
     string forward(int steps);
 
+    /** Returns the current page, or nullptr if history is empty. */
+    Node* current_page() const;
+
 };

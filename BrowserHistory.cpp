@@ -67,3 +67,8 @@ string BrowserHistory::forward(int steps) {
     return current->url;
 }
 
+Node* BrowserHistory::current_page() const {
+    return current;
+}
+
+

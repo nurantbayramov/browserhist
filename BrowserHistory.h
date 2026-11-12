@@ -38,4 +38,16 @@ public:
     /** Returns all pages in history. */
     vector<Node*> _all_nodes() const;
 
+    /** Saves history to a text file. */
+    bool export_history(const string& path) const;
+
+    /** Loads history from a text file. */
+    bool import_history(const string& path);
+
+    /** Deletes a page by URL. */
+    bool delete_url(const string& url);
+
+    /** Restores the last deleted page. */
+    bool restore_url();
+
 };

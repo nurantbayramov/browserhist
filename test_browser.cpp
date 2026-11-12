@@ -133,5 +133,32 @@ int main() {
 
     cout << "Test 16 passed" << endl;
 
+
+    // Test 17: Find node
+    BrowserHistory b("ada.edu.az", 5);
+    b.visit("github.com");
+    b.visit("spotify.com");
+
+    assert(b._find_node("github.com") != nullptr);
+    assert(b._find_node("youtube.com") == nullptr);
+    cout << "Test 17 passed" << endl;
+
+    // Test 18: Set current
+    Node* found = b._find_node("github.com");
+    b._set_current(found);
+
+    assert(b.current_page()->url == "github.com");
+    cout << "Test 18 passed" << endl;
+
+    // Test 19: All nodes
+    vector<Node*> pages = b._all_nodes();
+
+    assert(pages.size() == 3);
+    assert(pages[0]->url == "ada.edu.az");
+    assert(pages[1]->url == "github.com");
+    assert(pages[2]->url == "spotify.com");
+
+    cout << "Test 19 passed" << endl;
+
     return 0;
 }

@@ -160,5 +160,30 @@ int main() {
 
     cout << "Test 19 passed" << endl;
 
+
+    // Test 20: Invalid capacity
+    bool capacityError = false;
+    try {
+        BrowserHistory invalidBrowser("ada.edu.az", 0);
+    } catch (const invalid_argument&) {
+        capacityError = true;
+    }
+    assert(capacityError);
+    cout << "Test 20 passed" << endl;
+
+    // Test 21: Node from another browser
+    BrowserHistory first("ada.edu.az");
+    BrowserHistory second("github.com");
+
+    bool nodeError = false;
+    try {
+        first._set_current(second.current_page());
+    } catch (const invalid_argument&) {
+        nodeError = true;
+    }
+    assert(nodeError);
+    assert(first.current_page()->url == "ada.edu.az");
+    cout << "Test 21 passed" << endl;
+
     return 0;
 }

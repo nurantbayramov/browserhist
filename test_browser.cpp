@@ -1,3 +1,4 @@
+#include <sstream>
 #include "BrowserHistory.h"
 #include <iostream>
 #include <cassert>
@@ -72,6 +73,65 @@ int main() {
     assert(error);
     cout << "Test 10 passed" << endl;
 
-    cout << "All tests passed!" << endl;
+    // Test 11: Capacity 1
+    BrowserHistory smallBrowser("ada.edu.az", 1);
+    smallBrowser.visit("github.com");
+    smallBrowser.visit("spotify.com");
+
+    assert(smallBrowser.current_page()->url == "spotify.com");
+    assert(smallBrowser.back(100) == "spotify.com");
+    cout << "Test 11 passed" << endl;
+
+    // Test 12: Negative forward steps
+    error = false;
+    try {
+        browser.forward(-1);
+    } catch (const invalid_argument&) {
+        error = true;
+    }
+    assert(error);
+    cout << "Test 12 passed" << endl;
+
+    // Test 13: Empty history
+    browser.delete_history();
+
+    assert(browser.current_page() == nullptr);
+    assert(browser.back(1) == "");
+    assert(browser.forward(1) == "");
+    cout << "Test 13 passed" << endl;
+
+    // Test 14: Visit after deleting history
+    browser.visit("github.com");
+
+    assert(browser.current_page()->url == "github.com");
+    cout << "Test 14 passed" << endl;
+
+    // Test 15: Zero steps
+    assert(browser.back(0) == "github.com");
+    assert(browser.forward(0) == "github.com");
+    cout << "Test 15 passed" << endl;
+
+
+    // Test 16: Display history
+    BrowserHistory testBrowser("ada.edu.az", 5);
+    testBrowser.visit("github.com");
+    testBrowser.visit("spotify.com");
+    testBrowser.back(1);
+
+    ostringstream output;
+    streambuf* old = cout.rdbuf(output.rdbuf());
+
+    testBrowser.display_history();
+
+    cout.rdbuf(old);
+
+    string result = output.str();
+
+    assert(result.find("1. ada.edu.az") != string::npos);
+    assert(result.find("2. github.com [<]") != string::npos);
+    assert(result.find("3. spotify.com") != string::npos);
+
+    cout << "Test 16 passed" << endl;
+
     return 0;
 }

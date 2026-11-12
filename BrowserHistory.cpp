@@ -99,5 +99,33 @@ void BrowserHistory::delete_history() {
     current = nullptr;
 }
 
+Node* BrowserHistory::_find_node(const string& url) const {
+    return history.find(url);
+}
+   
+void BrowserHistory::_set_current(Node* node) {
+    if (node == nullptr) {
+        current = nullptr;
+        return;
+    }
+
+    vector<Node*> pages = history.to_list();
+
+    for (Node* page : pages) {
+        if (page == node) {
+            current = node;
+            return;
+        }
+    }
+
+    throw invalid_argument("Node not found in history");
+}
+
+vector<Node*> BrowserHistory::_all_nodes() const {
+    return history.to_list();
+}
+
+
+
 
 

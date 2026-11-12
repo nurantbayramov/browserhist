@@ -29,4 +29,13 @@ public:
     /** Deletes all pages from browser history. */
     void delete_history();
 
+    /** Finds a page by its URL. Returns nullptr if not found. */
+    Node* _find_node(const string& url) const;
+
+    /** Changes the current page. */
+    void _set_current(Node* node);
+
+    /** Returns all pages in history. */
+    vector<Node*> _all_nodes() const;
+
 };

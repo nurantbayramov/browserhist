@@ -1,0 +1,14 @@
+# build outputs
+browser
+demo
+test_linked_list
+test_browser
+test_features
+test_integration
+*_asan
+*.exe
+*.o
+# files made by the tests and the demo
+test_tmp_*.txt
+demo_history.txt
+history.txt

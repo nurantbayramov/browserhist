@@ -53,7 +53,7 @@ static void write_file(const string& path, const string& text) {
 }
 
 static string read_file(const string& path) {
-    ifstream f(path, ios::binary);
+    ifstream f(path); // text mode, so on Windows \r\n is read as \n
     stringstream ss;
     ss << f.rdbuf();
     return ss.str();
